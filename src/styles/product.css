@@ -5,17 +5,20 @@
  * These styles can be overridden by the user.
  */
 
+/* Import base styles */
+@import './base.css';
+
 /* ProductCard */
 .shopcore-product-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-medium, 0.5rem);
   overflow: hidden;
   transition:
     transform 0.2s,
     box-shadow 0.2s;
-  background-color: #fff;
+  background-color: var(--color-background, #fff);
   height: 100%;
   cursor: pointer;
 }
@@ -46,117 +49,119 @@
 
 .shopcore-product-card-discount {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background-color: #ef4444;
+  top: var(--spacing-sm, 0.5rem);
+  right: var(--spacing-sm, 0.5rem);
+  background-color: var(--color-accent, #f59e0b);
   color: white;
   padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
+  border-radius: var(--radius-small, 0.25rem);
   font-weight: 600;
+  font-size: 0.875rem;
 }
 
 .shopcore-product-card-content {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: var(--spacing-md, 1rem);
   flex-grow: 1;
 }
 
 .shopcore-product-card-title {
-  font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: #1e293b;
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-sm, 0.5rem);
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-card-rating {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
+  margin-bottom: var(--spacing-sm, 0.5rem);
 }
 
 .shopcore-product-card-rating-stars {
   display: flex;
-  margin-right: 0.5rem;
+  margin-right: var(--spacing-sm, 0.5rem);
 }
 
 .shopcore-product-card-rating-star {
-  color: #cbd5e1;
+  color: var(--color-muted, #94a3b8);
 }
 
 .shopcore-product-card-rating-star.filled {
-  color: #f59e0b;
+  color: var(--color-warning, #f59e0b);
 }
 
 .shopcore-product-card-rating-count {
-  color: #64748b;
+  font-size: 0.875rem;
+  color: var(--color-muted, #94a3b8);
 }
 
 .shopcore-product-card-price {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-sm, 0.5rem);
 }
 
 .shopcore-product-card-current-price {
   font-weight: 600;
   font-size: 1.125rem;
-  color: #0f172a;
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-card-original-price {
-  margin-left: 0.5rem;
+  margin-left: var(--spacing-sm, 0.5rem);
   font-size: 0.875rem;
-  color: #64748b;
   text-decoration: line-through;
+  color: var(--color-muted, #94a3b8);
 }
 
 .shopcore-product-card-description {
   font-size: 0.875rem;
-  color: #64748b;
-  margin-bottom: 1rem;
+  color: var(--color-muted, #94a3b8);
+  margin-bottom: var(--spacing-md, 1rem);
   flex-grow: 1;
 }
 
 .shopcore-product-card-actions {
   display: flex;
+  justify-content: space-between;
   margin-top: auto;
 }
 
 .shopcore-product-card-add-to-cart {
-  flex-grow: 1;
-  padding: 0.5rem 1rem;
-  background-color: #0070f3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+  background-color: var(--color-primary, #0070f3);
   color: white;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-medium, 0.5rem);
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .shopcore-product-card-add-to-cart:hover {
-  background-color: #0051a8;
+  background-color: color-mix(in srgb, var(--color-primary, #0070f3), black 10%);
 }
 
 .shopcore-product-card-add-to-cart:disabled {
-  background-color: #cbd5e1;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .shopcore-product-card-add-to-wishlist {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2.5rem;
-  margin-left: 0.5rem;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.25rem;
-  color: #64748b;
-  font-size: 1.25rem;
+  height: 2.5rem;
+  background-color: transparent;
+  color: var(--color-text, #0f172a);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-medium, 0.5rem);
   cursor: pointer;
   transition:
     background-color 0.2s,
@@ -164,27 +169,27 @@
 }
 
 .shopcore-product-card-add-to-wishlist:hover {
-  background-color: #fee2e2;
-  color: #ef4444;
+  background-color: var(--color-background, #f8fafc);
+  color: var(--color-primary, #0070f3);
 }
 
 /* ProductGrid */
 .shopcore-product-grid {
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-md, 1rem);
 }
 
 /* ProductDetail */
 .shopcore-product-detail {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg, 1.5rem);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .shopcore-product-detail {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -196,9 +201,9 @@
 .shopcore-product-detail-main-image {
   position: relative;
   aspect-ratio: 1 / 1;
+  border-radius: var(--radius-medium, 0.5rem);
   overflow: hidden;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md, 1rem);
 }
 
 .shopcore-product-detail-main-image img {
@@ -209,36 +214,37 @@
 
 .shopcore-product-detail-discount {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: #ef4444;
+  top: var(--spacing-sm, 0.5rem);
+  right: var(--spacing-sm, 0.5rem);
+  background-color: var(--color-accent, #f59e0b);
   color: white;
   padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
+  border-radius: var(--radius-small, 0.25rem);
   font-weight: 600;
+  font-size: 0.875rem;
 }
 
 .shopcore-product-detail-thumbnails {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-sm, 0.5rem);
   overflow-x: auto;
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--spacing-sm, 0.5rem);
 }
 
 .shopcore-product-detail-thumbnail {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 0.25rem;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-small, 0.25rem);
   overflow: hidden;
-  border: 2px solid transparent;
   cursor: pointer;
-  padding: 0;
-  background: none;
+  border: 2px solid transparent;
+  transition:
+    border-color 0.2s,
+    opacity 0.2s;
 }
 
 .shopcore-product-detail-thumbnail.active {
-  border-color: #0070f3;
+  border-color: var(--color-primary, #0070f3);
 }
 
 .shopcore-product-detail-thumbnail img {
@@ -253,171 +259,173 @@
 }
 
 .shopcore-product-detail-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 1rem 0;
-  color: #0f172a;
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md, 1rem);
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-detail-rating {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md, 1rem);
 }
 
 .shopcore-product-detail-rating-stars {
   display: flex;
-  margin-right: 0.5rem;
+  margin-right: var(--spacing-sm, 0.5rem);
 }
 
 .shopcore-product-detail-rating-star {
-  color: #cbd5e1;
+  color: var(--color-muted, #94a3b8);
   font-size: 1.25rem;
 }
 
 .shopcore-product-detail-rating-star.filled {
-  color: #f59e0b;
+  color: var(--color-warning, #f59e0b);
 }
 
 .shopcore-product-detail-rating-value {
   font-weight: 600;
-  margin-right: 0.5rem;
+  margin-right: var(--spacing-sm, 0.5rem);
 }
 
 .shopcore-product-detail-rating-count {
-  color: #64748b;
+  color: var(--color-muted, #94a3b8);
 }
 
 .shopcore-product-detail-price {
   display: flex;
   align-items: center;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
+  margin-bottom: var(--spacing-md, 1rem);
 }
 
 .shopcore-product-detail-current-price {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.5rem;
-  color: #0f172a;
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-detail-original-price {
-  margin-left: 0.75rem;
-  font-size: 1rem;
-  color: #64748b;
+  margin-left: var(--spacing-sm, 0.5rem);
+  font-size: 1.125rem;
   text-decoration: line-through;
+  color: var(--color-muted, #94a3b8);
 }
 
 .shopcore-product-detail-discount-percentage {
-  margin-left: 0.75rem;
-  font-size: 0.875rem;
+  margin-left: var(--spacing-sm, 0.5rem);
+  background-color: var(--color-accent, #f59e0b);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-small, 0.25rem);
   font-weight: 600;
-  color: #ef4444;
+  font-size: 0.875rem;
 }
 
 .shopcore-product-detail-description {
-  margin-bottom: 1.5rem;
-  color: #334155;
-  line-height: 1.5;
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-detail-variants {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-md, 1rem);
 }
 
 .shopcore-product-detail-variants label {
   display: block;
-  margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #334155;
+  margin-bottom: var(--spacing-sm, 0.5rem);
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-detail-variant-select {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.25rem;
-  background-color: #f8fafc;
-  color: #0f172a;
+  padding: var(--spacing-sm, 0.5rem);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-medium, 0.5rem);
+  background-color: var(--color-background, #fff);
+  margin-bottom: var(--spacing-md, 1rem);
 }
 
 .shopcore-product-detail-quantity {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg, 1.5rem);
 }
 
 .shopcore-product-detail-quantity label {
   display: block;
-  margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #334155;
+  margin-bottom: var(--spacing-sm, 0.5rem);
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-detail-quantity-input {
-  width: 5rem;
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.25rem;
-  background-color: #f8fafc;
-  color: #0f172a;
+  width: 100px;
+  padding: var(--spacing-sm, 0.5rem);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-medium, 0.5rem);
+  background-color: var(--color-background, #fff);
 }
 
 .shopcore-product-detail-actions {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--spacing-md, 1rem);
+  margin-bottom: var(--spacing-lg, 1.5rem);
 }
 
 .shopcore-product-detail-add-to-cart {
-  flex-grow: 1;
-  padding: 0.75rem 1.5rem;
-  background-color: #0070f3;
+  flex: 1;
+  padding: var(--spacing-md, 1rem);
+  background-color: var(--color-primary, #0070f3);
   color: white;
   border: none;
-  border-radius: 0.25rem;
-  font-weight: 600;
-  font-size: 1rem;
+  border-radius: var(--radius-medium, 0.5rem);
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .shopcore-product-detail-add-to-cart:hover {
-  background-color: #0051a8;
+  background-color: color-mix(in srgb, var(--color-primary, #0070f3), black 10%);
 }
 
 .shopcore-product-detail-add-to-cart:disabled {
-  background-color: #cbd5e1;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .shopcore-product-detail-add-to-wishlist {
-  padding: 0.75rem 1.5rem;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.25rem;
-  color: #64748b;
-  font-weight: 600;
-  font-size: 1rem;
+  padding: var(--spacing-md, 1rem);
+  background-color: transparent;
+  color: var(--color-text, #0f172a);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-medium, 0.5rem);
   cursor: pointer;
   transition:
     background-color 0.2s,
     color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .shopcore-product-detail-add-to-wishlist:hover {
-  background-color: #fee2e2;
-  color: #ef4444;
+  background-color: var(--color-background, #f8fafc);
+  color: var(--color-primary, #0070f3);
 }
 
 .shopcore-product-detail-attributes {
-  border-top: 1px solid #e2e8f0;
-  padding-top: 1.5rem;
+  margin-top: var(--spacing-lg, 1.5rem);
 }
 
 .shopcore-product-detail-attributes h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  margin: 0 0 1rem 0;
-  color: #0f172a;
+  margin-bottom: var(--spacing-md, 1rem);
+  color: var(--color-text, #0f172a);
 }
 
 .shopcore-product-detail-attributes ul {
@@ -428,11 +436,11 @@
 
 .shopcore-product-detail-attributes li {
   display: flex;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #f1f5f9;
+  padding: var(--spacing-sm, 0.5rem) 0;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
 }
 
 .shopcore-product-detail-attributes li strong {
   width: 40%;
-  color: #64748b;
+  color: var(--color-text, #0f172a);
 }
