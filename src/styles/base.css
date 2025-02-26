@@ -1,0 +1,380 @@
+/**
+ * Shopcore Base Styles
+ * 
+ * This file contains the base styles for Shopcore, using CSS variables
+ * generated from the theme configuration.
+ */
+
+/**
+ * Base styles
+ */
+.shopcore {
+  /* Colors */
+  --color-primary: var(--shopcore-color-primary, #0070f3);
+  --color-secondary: var(--shopcore-color-secondary, #1e293b);
+  --color-accent: var(--shopcore-color-accent, #f59e0b);
+  --color-background: var(--shopcore-color-background, #ffffff);
+  --color-text: var(--shopcore-color-text, #0f172a);
+  --color-error: var(--shopcore-color-error, #ef4444);
+  --color-success: var(--shopcore-color-success, #10b981);
+  --color-warning: var(--shopcore-color-warning, #f59e0b);
+  --color-info: var(--shopcore-color-info, #3b82f6);
+  --color-border: var(--shopcore-color-border, #e2e8f0);
+  --color-muted: var(--shopcore-color-muted, #94a3b8);
+
+  /* Fonts */
+  --font-body: var(
+    --shopcore-font-body,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif
+  );
+  --font-heading: var(
+    --shopcore-font-heading,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif
+  );
+  --font-monospace: var(
+    --shopcore-font-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace
+  );
+
+  /* Border radius */
+  --radius-small: var(--shopcore-radius-small, 0.25rem);
+  --radius-medium: var(--shopcore-radius-medium, 0.5rem);
+  --radius-large: var(--shopcore-radius-large, 1rem);
+  --radius-full: var(--shopcore-radius-full, 9999px);
+
+  /* Spacing */
+  --spacing-xs: var(--shopcore-spacing-xs, 0.25rem);
+  --spacing-sm: var(--shopcore-spacing-sm, 0.5rem);
+  --spacing-md: var(--shopcore-spacing-md, 1rem);
+  --spacing-lg: var(--shopcore-spacing-lg, 1.5rem);
+  --spacing-xl: var(--shopcore-spacing-xl, 2rem);
+  --spacing-xxl: var(--shopcore-spacing-xxl, 3rem);
+
+  /* Apply base styles */
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  line-height: 1.5;
+}
+
+/**
+ * Typography
+ */
+.shopcore h1,
+.shopcore h2,
+.shopcore h3,
+.shopcore h4,
+.shopcore h5,
+.shopcore h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+}
+
+.shopcore h1 {
+  font-size: 2.25rem;
+}
+
+.shopcore h2 {
+  font-size: 1.875rem;
+}
+
+.shopcore h3 {
+  font-size: 1.5rem;
+}
+
+.shopcore h4 {
+  font-size: 1.25rem;
+}
+
+.shopcore h5 {
+  font-size: 1.125rem;
+}
+
+.shopcore h6 {
+  font-size: 1rem;
+}
+
+.shopcore p {
+  margin-bottom: var(--spacing-md);
+}
+
+.shopcore a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.shopcore a:hover {
+  text-decoration: underline;
+}
+
+.shopcore code,
+.shopcore pre {
+  font-family: var(--font-monospace);
+  font-size: 0.875rem;
+}
+
+.shopcore pre {
+  background-color: var(--color-secondary);
+  color: #f8fafc;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-medium);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-md);
+}
+
+/**
+ * Buttons
+ */
+.shopcore-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-medium);
+  font-weight: 500;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.shopcore-button:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 4px var(--color-primary);
+}
+
+.shopcore-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Primary button */
+.shopcore-button-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.shopcore-button-primary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-primary), black 10%);
+}
+
+/* Secondary button */
+.shopcore-button-secondary {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.shopcore-button-secondary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-secondary), black 10%);
+}
+
+/* Outline button */
+.shopcore-button-outline {
+  background-color: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.shopcore-button-outline:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-background), black 5%);
+}
+
+/* Ghost button */
+.shopcore-button-ghost {
+  background-color: transparent;
+  color: var(--color-text);
+}
+
+.shopcore-button-ghost:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-background), black 5%);
+}
+
+/**
+ * Form elements
+ */
+.shopcore-input {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.shopcore-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary), transparent 80%);
+}
+
+.shopcore-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.shopcore-label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+}
+
+.shopcore-select {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-md) center;
+  padding-right: var(--spacing-xl);
+}
+
+.shopcore-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary), transparent 80%);
+}
+
+.shopcore-checkbox {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.shopcore-checkbox input {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  margin-right: var(--spacing-sm);
+  position: relative;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.shopcore-checkbox input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.shopcore-checkbox input:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.75rem;
+  height: 0.75rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.shopcore-checkbox input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary), transparent 80%);
+}
+
+/**
+ * Utility classes
+ */
+.shopcore-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+.shopcore-card {
+  background-color: var(--color-background);
+  border-radius: var(--radius-medium);
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: var(--spacing-lg);
+}
+
+.shopcore-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--spacing-md) 0;
+}
+
+/* Responsive breakpoints */
+@media (min-width: 640px) {
+  .shopcore-container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .shopcore-container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shopcore-container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .shopcore-container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .shopcore-container {
+    max-width: 1536px;
+  }
+}
