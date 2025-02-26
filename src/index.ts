@@ -17,6 +17,18 @@ export type {
 
 export type { Product, ProductImage, ProductReview, ProductVariant } from './core/types/product';
 
+// Export theme types and utilities
+export type {
+  Theme,
+  ThemeBorderRadius,
+  ThemeBreakpoints,
+  ThemeColors,
+  ThemeFonts,
+  ThemeSpacing,
+} from './core/theme/theme';
+
+export { defaultTheme, generateCssVariables, generateThemeStylesheet, mergeTheme } from './core/theme/theme';
+
 // Export context and provider
 export {
   ShopcoreProvider,
@@ -29,7 +41,7 @@ export {
 export { defaultConfig, validateConfig } from './core/config/defaults';
 
 // Export utilities
-export { LogLevel, createLogger, type LoggerConfig } from './utils/logger';
+export { createLogger, LogLevel, type LoggerConfig } from './utils/logger';
 
 export { calculateDiscountPercentage, formatPrice, type PriceFormatOptions } from './utils/price';
 
@@ -75,10 +87,35 @@ export const VERSION = '0.1.0';
  * CSS Styles
  *
  * The following CSS files are available in the dist/styles directory:
+ * - base.css: Base styles and CSS variables
  * - product.css: Styles for product components
  *
  * Import them in your application:
  * ```
+ * import 'shopcore/dist/styles/base.css';
  * import 'shopcore/dist/styles/product.css';
+ * ```
+ */
+
+/**
+ * Tailwind CSS Plugin
+ *
+ * Shopcore provides a Tailwind CSS plugin that adds theme colors and utilities.
+ *
+ * Import it in your tailwind.config.js:
+ * ```js
+ * const shopcorePlugin = require('shopcore/tailwind');
+ *
+ * module.exports = {
+ *   // ... other Tailwind config
+ *   plugins: [
+ *     shopcorePlugin({
+ *       // Override default colors
+ *       colors: {
+ *         primary: '#ff0000', // Override primary color
+ *       },
+ *     }),
+ *   ],
+ * };
  * ```
  */

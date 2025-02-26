@@ -7,11 +7,26 @@
   "type": "module",
   "files": [
     "dist",
+    "tailwind",
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./tailwind": {
+      "require": "./dist/tailwind/plugin.js"
+    },
+    "./dist/styles/*": "./dist/styles/*"
+  },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target browser",
+    "build": "npm run build:js && npm run build:types && npm run build:css && npm run build:tailwind",
+    "build:js": "bun build ./src/index.ts --outdir ./dist --target browser",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
+    "build:css": "mkdir -p dist/styles && cp src/styles/*.css dist/styles/",
+    "build:tailwind": "mkdir -p dist/tailwind && cp src/tailwind/plugin.js dist/tailwind/",
     "dev": "bun build ./src/index.ts --outdir ./dist --target browser --watch",
     "test": "vitest run",
     "test:watch": "vitest",
