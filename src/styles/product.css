@@ -1,0 +1,438 @@
+/**
+ * Product Component Styles
+ * 
+ * This file contains basic styling for the product components.
+ * These styles can be overridden by the user.
+ */
+
+/* ProductCard */
+.shopcore-product-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  background-color: #fff;
+  height: 100%;
+  cursor: pointer;
+}
+
+.shopcore-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shopcore-product-card-image {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.shopcore-product-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.shopcore-product-card:hover .shopcore-product-card-image img {
+  transform: scale(1.05);
+}
+
+.shopcore-product-card-discount {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.shopcore-product-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.shopcore-product-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+}
+
+.shopcore-product-card-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.shopcore-product-card-rating-stars {
+  display: flex;
+  margin-right: 0.5rem;
+}
+
+.shopcore-product-card-rating-star {
+  color: #cbd5e1;
+}
+
+.shopcore-product-card-rating-star.filled {
+  color: #f59e0b;
+}
+
+.shopcore-product-card-rating-count {
+  color: #64748b;
+}
+
+.shopcore-product-card-price {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.shopcore-product-card-current-price {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #0f172a;
+}
+
+.shopcore-product-card-original-price {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.shopcore-product-card-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.shopcore-product-card-actions {
+  display: flex;
+  margin-top: auto;
+}
+
+.shopcore-product-card-add-to-cart {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.shopcore-product-card-add-to-cart:hover {
+  background-color: #0051a8;
+}
+
+.shopcore-product-card-add-to-cart:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.shopcore-product-card-add-to-wishlist {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  margin-left: 0.5rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  color: #64748b;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.shopcore-product-card-add-to-wishlist:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+/* ProductGrid */
+.shopcore-product-grid {
+  width: 100%;
+}
+
+/* ProductDetail */
+.shopcore-product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .shopcore-product-detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shopcore-product-detail-gallery {
+  display: flex;
+  flex-direction: column;
+}
+
+.shopcore-product-detail-main-image {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.shopcore-product-detail-main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shopcore-product-detail-discount {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.shopcore-product-detail-thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.shopcore-product-detail-thumbnail {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+
+.shopcore-product-detail-thumbnail.active {
+  border-color: #0070f3;
+}
+
+.shopcore-product-detail-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shopcore-product-detail-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.shopcore-product-detail-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: #0f172a;
+}
+
+.shopcore-product-detail-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.shopcore-product-detail-rating-stars {
+  display: flex;
+  margin-right: 0.5rem;
+}
+
+.shopcore-product-detail-rating-star {
+  color: #cbd5e1;
+  font-size: 1.25rem;
+}
+
+.shopcore-product-detail-rating-star.filled {
+  color: #f59e0b;
+}
+
+.shopcore-product-detail-rating-value {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.shopcore-product-detail-rating-count {
+  color: #64748b;
+}
+
+.shopcore-product-detail-price {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.shopcore-product-detail-current-price {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #0f172a;
+}
+
+.shopcore-product-detail-original-price {
+  margin-left: 0.75rem;
+  font-size: 1rem;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.shopcore-product-detail-discount-percentage {
+  margin-left: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ef4444;
+}
+
+.shopcore-product-detail-description {
+  margin-bottom: 1.5rem;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.shopcore-product-detail-variants {
+  margin-bottom: 1.5rem;
+}
+
+.shopcore-product-detail-variants label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.shopcore-product-detail-variant-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.shopcore-product-detail-quantity {
+  margin-bottom: 1.5rem;
+}
+
+.shopcore-product-detail-quantity label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.shopcore-product-detail-quantity-input {
+  width: 5rem;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.shopcore-product-detail-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.shopcore-product-detail-add-to-cart {
+  flex-grow: 1;
+  padding: 0.75rem 1.5rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.shopcore-product-detail-add-to-cart:hover {
+  background-color: #0051a8;
+}
+
+.shopcore-product-detail-add-to-cart:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.shopcore-product-detail-add-to-wishlist {
+  padding: 0.75rem 1.5rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.shopcore-product-detail-add-to-wishlist:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.shopcore-product-detail-attributes {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+
+.shopcore-product-detail-attributes h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: #0f172a;
+}
+
+.shopcore-product-detail-attributes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.shopcore-product-detail-attributes li {
+  display: flex;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.shopcore-product-detail-attributes li strong {
+  width: 40%;
+  color: #64748b;
+}

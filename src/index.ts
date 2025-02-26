@@ -1,0 +1,84 @@
+/**
+ * Shopcore - An open-source e-commerce framework
+ *
+ * @packageDocumentation
+ */
+
+// Export types
+export type {
+  CacheSettings,
+  CartItem,
+  MockConfig,
+  Order,
+  ShopcoreConfig,
+  ThemeConfig,
+  User,
+} from './core/types/config';
+
+export type { Product, ProductImage, ProductReview, ProductVariant } from './core/types/product';
+
+// Export context and provider
+export {
+  ShopcoreProvider,
+  useShopcoreConfig,
+  useShopcoreContext,
+  type ShopcoreProviderProps,
+} from './core/context/ShopcoreContext';
+
+// Export configuration utilities
+export { defaultConfig, validateConfig } from './core/config/defaults';
+
+// Export utilities
+export { LogLevel, createLogger, type LoggerConfig } from './utils/logger';
+
+export { calculateDiscountPercentage, formatPrice, type PriceFormatOptions } from './utils/price';
+
+export {
+  calculateAverageRating,
+  fetchProductById,
+  fetchProducts,
+  filterProducts,
+  generateProductSlug,
+  getRelatedProducts,
+  getStockStatusText,
+  isNewProduct,
+  isProductOnSale,
+  searchProducts,
+  sortProducts,
+  type ProductFetchOptions,
+  type ProductFetchResult,
+  type ProductFilterOptions,
+  type ProductPaginationOptions,
+  type ProductSearchOptions,
+  type ProductSortOptions,
+} from './utils/products';
+
+// Export hooks
+export { usePrice, type UsePriceOptions, type UsePriceResult } from './hooks/usePrice';
+
+export { useProduct, useProducts } from './hooks/useProducts';
+
+// Export components
+export {
+  ProductCard,
+  ProductDetail,
+  ProductGrid,
+  type ProductCardProps,
+  type ProductDetailProps,
+  type ProductGridProps,
+} from './components/product';
+
+// Version information
+export const VERSION = '0.1.0';
+
+/**
+ * CSS Styles
+ *
+ * The following CSS files are available in the dist/styles directory:
+ * - product.css: Styles for product components
+ *
+ * Import them in your application:
+ * ```
+ * import 'shopcore/dist/styles/product.css';
+ * ```
+ */
