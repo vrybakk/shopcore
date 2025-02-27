@@ -1,10 +1,13 @@
-import { mockProducts } from './mock/products';
 import { ShopcoreConfig } from './types/config';
 
 /**
  * Default configuration for Shopcore
  */
 export const defaultConfig: ShopcoreConfig = {
+  mode: 'development',
+  defaultCurrency: 'USD',
+  supportedCurrencies: ['USD', 'EUR', 'GBP'],
+  defaultLocale: 'en-US',
   version: '0.1.0',
   debug: false,
   api: {
@@ -74,11 +77,8 @@ export const defaultConfig: ShopcoreConfig = {
     storage: 'localStorage',
   },
   mock: {
-    enabled: true,
-    fallbackOnError: true,
-    data: {
-      products: mockProducts,
-    },
+    enabled: false,
+    delay: 0,
   },
   i18n: {
     defaultLocale: 'en-US',
