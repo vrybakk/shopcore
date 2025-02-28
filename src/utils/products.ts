@@ -1,5 +1,5 @@
 import { ShopcoreConfig } from '../core/types/config';
-import { Product } from '../core/types/product';
+import { Product, ProductCategory } from '../core/types/product';
 import { createLogger } from './logger';
 
 // Create a logger instance
@@ -344,8 +344,17 @@ async function fetchMockProductById(config: ShopcoreConfig, productId: string): 
 export function filterProducts(products: Product[], options: ProductFilterOptions): Product[] {
   return products.filter((product) => {
     // Filter by category
-    if (options.category && product.categories && !product.categories.includes(options.category)) {
-      return false;
+    if (options.category) {
+      // If product has categories array, check if it includes the filter category
+      if (product.categories && Array.isArray(product.categories)) {
+        if (!product.categories.includes(options.category as ProductCategory)) {
+          return false;
+        }
+      }
+      // Otherwise check the single category property
+      else if (product.category !== options.category) {
+        return false;
+      }
     }
 
     // Filter by price
@@ -537,10 +546,13 @@ export function getRelatedProducts(product: Product, allProducts: Product[], lim
 
     // Same category
     if (product.categories && p.categories) {
-      const commonCategories = product.categories.filter((cat) => p.categories?.includes(cat));
+      const commonCategories = product.categories.filter((cat: ProductCategory) => p.categories?.includes(cat));
       if (commonCategories.length > 0) {
         score += 3 * commonCategories.length;
       }
+    } else if (product.category === p.category) {
+      // If categories arrays aren't available, compare single category
+      score += 3;
     }
 
     // Same tags
@@ -597,16 +609,19 @@ export function getStockStatusText(product: Product): string {
     return 'Out of Stock';
   }
 
-  if (product.quantity === undefined || product.quantity === null) {
+  // Get the stock quantity (either from quantity or stock property)
+  const stockQuantity = product.quantity !== undefined ? product.quantity : product.stock;
+
+  if (stockQuantity === undefined || stockQuantity === null) {
     return 'In Stock';
   }
 
-  if (product.quantity <= 0) {
+  if (stockQuantity <= 0) {
     return 'Out of Stock';
   }
 
-  if (product.quantity < 5) {
-    return `Only ${product.quantity} left in stock`;
+  if (stockQuantity < 5) {
+    return `Only ${stockQuantity} left in stock`;
   }
 
   return 'In Stock';

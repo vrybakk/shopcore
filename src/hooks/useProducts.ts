@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useShopcore } from '../core/context/ShopcoreContext';
+import { ShopcoreConfig as ProductsConfig } from '../core/types/config';
 import { Product } from '../core/types/product';
-import { logger } from '../utils/logger';
+import { createLogger } from '../utils/logger';
 import {
   fetchProductById,
   fetchProducts,
@@ -11,7 +13,6 @@ import {
   ProductSearchOptions,
   ProductSortOptions,
 } from '../utils/products';
-import { useShopcoreConfig } from './useShopcoreConfig';
 
 /**
  * Interface for the useProducts hook result
@@ -79,6 +80,9 @@ const defaultOptions: UseProductsOptions = {
   autoFetch: true,
 };
 
+// Create a default logger instance
+const logger = createLogger({ debug: true, mode: 'development' });
+
 /**
  * Hook for using products with the Shopcore configuration
  *
@@ -86,7 +90,7 @@ const defaultOptions: UseProductsOptions = {
  * @returns The hook result
  */
 export function useProducts(options: UseProductsOptions = {}): UseProductsResult {
-  const { config } = useShopcoreConfig();
+  const { config } = useShopcore();
 
   // Merge options with defaults
   const mergedOptions = { ...defaultOptions, ...options };
@@ -138,7 +142,17 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsResult
           pagination,
         };
 
-        const result = await fetchProducts(config, options);
+        // Create a config object that matches the expected type
+        const productsConfig: ProductsConfig = {
+          mode: config.mode || 'production',
+          defaultCurrency: config.defaultCurrency || 'USD',
+          supportedCurrencies: config.supportedCurrencies || ['USD'],
+          defaultLocale: config.defaultLocale || 'en-US',
+          debug: config.debug,
+          mock: config.mock,
+        };
+
+        const result = await fetchProducts(productsConfig, options);
 
         setProductData(result);
       } catch (err) {
@@ -166,7 +180,17 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsResult
         setLoading(true);
         setError(null);
 
-        const product = await fetchProductById(config, productId);
+        // Create a config object that matches the expected type
+        const productsConfig: ProductsConfig = {
+          mode: config.mode || 'production',
+          defaultCurrency: config.defaultCurrency || 'USD',
+          supportedCurrencies: config.supportedCurrencies || ['USD'],
+          defaultLocale: config.defaultLocale || 'en-US',
+          debug: config.debug,
+          mock: config.mock as any,
+        };
+
+        const product = await fetchProductById(productsConfig, productId);
 
         return product;
       } catch (err) {
@@ -335,47 +359,56 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsResult
 /**
  * Hook for fetching a single product by ID
  *
- * @param productId - The product ID
- * @returns The hook result
+ * @param productId - The ID of the product to fetch
+ * @returns The product data and loading state
  */
 export function useProduct(productId: string) {
-  const { config } = useShopcoreConfig();
+  const { config } = useShopcore();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchProduct = useCallback(async (): Promise<void> => {
-    if (!config) {
-      logger.error('Shopcore config is not available');
+  useEffect(() => {
+    if (!productId) {
       return;
     }
 
-    try {
-      setLoading(true);
-      setError(null);
+    async function fetchProduct() {
+      if (!config) {
+        return;
+      }
 
-      const result = await fetchProductById(config, productId);
+      try {
+        setLoading(true);
+        setError(null);
 
-      setProduct(result);
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(`Failed to fetch product: ${productId}`);
-      setError(error);
-      logger.error('Error fetching product', { error, productId });
-    } finally {
-      setLoading(false);
+        // Create a config object that matches the expected type
+        const productsConfig: ProductsConfig = {
+          mode: config.mode || 'production',
+          defaultCurrency: config.defaultCurrency || 'USD',
+          supportedCurrencies: config.supportedCurrencies || ['USD'],
+          defaultLocale: config.defaultLocale || 'en-US',
+          debug: config.debug,
+          mock: config.mock as any,
+        };
+
+        const result = await fetchProductById(productsConfig, productId);
+        setProduct(result);
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(`Failed to fetch product: ${productId}`);
+        setError(error);
+        logger.error('Error fetching product', { error, productId });
+      } finally {
+        setLoading(false);
+      }
     }
+
+    fetchProduct();
   }, [config, productId]);
-
-  useEffect(() => {
-    if (config && productId) {
-      fetchProduct();
-    }
-  }, [config, productId, fetchProduct]);
 
   return {
     product,
     loading,
     error,
-    refetch: fetchProduct,
   };
 }
