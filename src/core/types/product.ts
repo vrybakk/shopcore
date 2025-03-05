@@ -1,6 +1,6 @@
 /**
  * Product Types
- * 
+ *
  * This file contains all the type definitions for products in Shopcore.
  */
 
@@ -40,28 +40,263 @@ export interface ProductImage {
 }
 
 /**
- * Product variant interface
+ * Product categories
  */
-export interface ProductVariant {
+export type ProductCategory =
+  | 'electronics'
+  | 'clothing'
+  | 'books'
+  | 'home'
+  | 'beauty'
+  | 'sports'
+  | 'toys'
+  | 'food'
+  | 'other';
+
+/**
+ * Product interface
+ */
+export interface Product {
   /**
-   * Unique identifier for the variant
+   * Unique identifier for the product
    */
   id: string;
 
   /**
-   * Name of the variant
+   * Name of the product
    */
   name: string;
 
   /**
-   * SKU (Stock Keeping Unit) of the variant
+   * Detailed description of the product
+   */
+  description: string;
+
+  /**
+   * Current price of the product
+   */
+  price: number;
+
+  /**
+   * Original price before any discounts
+   */
+  originalPrice?: number;
+
+  /**
+   * Discount percentage (0-100)
+   */
+  discountPercentage?: number;
+
+  /**
+   * Main product image URL
+   */
+  image?: string;
+
+  /**
+   * Additional product images
+   */
+  images?: string[];
+
+  /**
+   * Product category
+   */
+  category: ProductCategory;
+
+  /**
+   * Product categories (for products that belong to multiple categories)
+   */
+  categories?: ProductCategory[];
+
+  /**
+   * Product tags for filtering and search
+   */
+  tags?: string[];
+
+  /**
+   * Stock Keeping Unit - unique identifier for inventory
    */
   sku?: string;
 
   /**
-   * Price of the variant
+   * Number of items in stock
    */
-  price: number;
+  stock?: number;
+
+  /**
+   * Quantity available (alias for stock)
+   */
+  quantity?: number;
+
+  /**
+   * Whether the product is in stock
+   */
+  inStock?: boolean;
+
+  /**
+   * Product slug for URL
+   */
+  slug?: string;
+
+  /**
+   * Short description or summary
+   */
+  summary?: string;
+
+  /**
+   * Compare at price (same as original price)
+   */
+  compareAtPrice?: number;
+
+  /**
+   * Currency code (e.g., USD, EUR)
+   */
+  currency?: string;
+
+  /**
+   * Product image URL
+   */
+  imageUrl?: string;
+
+  /**
+   * Additional product images
+   */
+  additionalImages?: ProductImage[];
+
+  /**
+   * Product rating (0-5)
+   */
+  rating?: number;
+
+  /**
+   * Number of reviews
+   */
+  reviewCount?: number;
+
+  /**
+   * Reviews of the product
+   */
+  reviews?: ProductReview[];
+
+  /**
+   * Whether the product is featured
+   */
+  featured?: boolean;
+
+  /**
+   * Whether the product is new
+   */
+  isNew?: boolean;
+
+  /**
+   * Whether the product is on sale
+   */
+  onSale?: boolean;
+
+  /**
+   * Product variants
+   */
+  variants?: ProductVariant[];
+
+  /**
+   * Product attributes
+   */
+  attributes?: Record<string, any>;
+
+  /**
+   * Product dimensions
+   */
+  dimensions?: {
+    width: number;
+    height: number;
+    depth: number;
+    unit: 'cm' | 'in';
+  };
+
+  /**
+   * Product weight
+   */
+  weight?: {
+    value: number;
+    unit: 'kg' | 'g' | 'lb' | 'oz';
+  };
+
+  /**
+   * Product brand
+   */
+  brand?: string;
+
+  /**
+   * Product manufacturer
+   */
+  manufacturer?: string;
+
+  /**
+   * Product warranty information
+   */
+  warranty?: string;
+
+  /**
+   * Product shipping information
+   */
+  shipping?: {
+    free: boolean;
+    cost?: number;
+    estimatedDelivery?: string;
+  };
+
+  /**
+   * Related products
+   */
+  relatedProducts?: string[];
+
+  /**
+   * SEO metadata
+   */
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+  };
+
+  /**
+   * Product metadata
+   */
+  metadata?: Record<string, any>;
+
+  /**
+   * Date the product was created
+   */
+  createdAt?: Date | string;
+
+  /**
+   * Date the product was last updated
+   */
+  updatedAt?: Date | string;
+}
+
+/**
+ * Product variant interface
+ */
+export interface ProductVariant {
+  /**
+   * Variant ID
+   */
+  id: string;
+
+  /**
+   * Variant name
+   */
+  name: string;
+
+  /**
+   * Variant SKU
+   */
+  sku?: string;
+
+  /**
+   * Variant price
+   */
+  price?: number;
 
   /**
    * Compare at price (original price before discount)
@@ -69,24 +304,29 @@ export interface ProductVariant {
   compareAtPrice?: number;
 
   /**
-   * Whether the variant is in stock
+   * Variant image
    */
-  inStock: boolean;
+  image?: string;
 
   /**
-   * Available quantity of the variant
-   */
-  quantity?: number;
-
-  /**
-   * Options specific to this variant (e.g., color, size)
-   */
-  options?: Record<string, string>;
-
-  /**
-   * Images specific to this variant
+   * Variant images
    */
   images?: ProductImage[];
+
+  /**
+   * Variant attributes
+   */
+  attributes: Record<string, string>;
+
+  /**
+   * Variant stock
+   */
+  stock?: number;
+
+  /**
+   * Whether the variant is in stock
+   */
+  inStock?: boolean;
 }
 
 /**
@@ -128,122 +368,3 @@ export interface ProductReview {
    */
   isVerified?: boolean;
 }
-
-/**
- * Product interface
- */
-export interface Product {
-  /**
-   * Unique identifier for the product
-   */
-  id: string;
-
-  /**
-   * Name of the product
-   */
-  name: string;
-
-  /**
-   * Slug for the product URL
-   */
-  slug?: string;
-
-  /**
-   * Description of the product
-   */
-  description?: string;
-
-  /**
-   * Short description or summary
-   */
-  summary?: string;
-
-  /**
-   * Base price of the product
-   */
-  price: number;
-
-  /**
-   * Compare at price (original price before discount)
-   */
-  compareAtPrice?: number;
-
-  /**
-   * Currency code (e.g., USD, EUR)
-   */
-  currency?: string;
-
-  /**
-   * Whether the product is in stock
-   */
-  inStock?: boolean;
-
-  /**
-   * Available quantity
-   */
-  quantity?: number;
-
-  /**
-   * Categories the product belongs to
-   */
-  categories?: string[];
-
-  /**
-   * Tags associated with the product
-   */
-  tags?: string[];
-
-  /**
-   * Images of the product
-   */
-  images?: ProductImage[];
-
-  /**
-   * Variants of the product
-   */
-  variants?: ProductVariant[];
-
-  /**
-   * Average rating (1-5)
-   */
-  rating?: number;
-
-  /**
-   * Number of reviews
-   */
-  reviewCount?: number;
-
-  /**
-   * Reviews of the product
-   */
-  reviews?: ProductReview[];
-
-  /**
-   * Related products
-   */
-  relatedProducts?: string[];
-
-  /**
-   * SEO metadata
-   */
-  seo?: {
-    title?: string;
-    description?: string;
-    keywords?: string[];
-  };
-
-  /**
-   * Custom attributes
-   */
-  attributes?: Record<string, any>;
-
-  /**
-   * Date the product was created
-   */
-  createdAt?: Date | string;
-
-  /**
-   * Date the product was last updated
-   */
-  updatedAt?: Date | string;
-} 
