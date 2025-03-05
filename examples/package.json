@@ -1,0 +1,9 @@
+{
+  "name": "shopcore-examples",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "nextjs": "cd nextjs && bun run dev"
+  }
+}
