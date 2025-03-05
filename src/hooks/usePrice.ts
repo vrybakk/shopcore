@@ -59,17 +59,17 @@ export interface UsePriceResult {
 
 /**
  * Hook for formatting prices according to the Shopcore configuration
- * 
+ *
  * @param options The price options
  * @returns The formatted price and related information
- * 
+ *
  * @example
  * ```tsx
  * const { formattedPrice, hasDiscount, discountPercentage } = usePrice({
  *   amount: 75,
  *   baseAmount: 100,
  * });
- * 
+ *
  * // Renders: <div>$75.00 <span>25% off</span></div>
  * return (
  *   <div>
@@ -83,16 +83,16 @@ export function usePrice(options: UsePriceOptions): UsePriceResult {
   const { amount, baseAmount, currency: currencyProp, locale: localeProp, customFormat } = options;
   const config = useShopcoreConfig();
 
-  // Get currency and locale from config or props
-  const currency = currencyProp || config.defaultCurrency;
-  const locale = localeProp || config.defaultLocale;
+  // Get currency and locale from config or props with defaults
+  const currency = currencyProp || config.defaultCurrency || 'USD';
+  const locale = localeProp || config.defaultLocale || 'en-US';
 
   return useMemo(() => {
     // Format options based on config and props
     const formatOptions: PriceFormatOptions = {
       currency,
       locale,
-      format: config.currencyFormat,
+      format: 'locale', // Default to locale formatting
       customFormat,
     };
 
@@ -100,14 +100,11 @@ export function usePrice(options: UsePriceOptions): UsePriceResult {
     const formattedPrice = formatPrice(amount, formatOptions);
 
     // Format the base price if provided
-    const formattedBasePrice = baseAmount
-      ? formatPrice(baseAmount, formatOptions)
-      : undefined;
+    const formattedBasePrice = baseAmount ? formatPrice(baseAmount, formatOptions) : undefined;
 
     // Calculate discount percentage if base amount is provided
-    const discountPercentage = baseAmount && baseAmount > amount
-      ? calculateDiscountPercentage(baseAmount, amount)
-      : undefined;
+    const discountPercentage =
+      baseAmount && baseAmount > amount ? calculateDiscountPercentage(baseAmount, amount) : undefined;
 
     return {
       formattedPrice,
@@ -115,5 +112,5 @@ export function usePrice(options: UsePriceOptions): UsePriceResult {
       discountPercentage,
       hasDiscount: Boolean(discountPercentage && discountPercentage > 0),
     };
-  }, [amount, baseAmount, currency, locale, config.currencyFormat, customFormat]);
-} 
+  }, [amount, baseAmount, currency, locale, customFormat]);
+}

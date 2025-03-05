@@ -32,8 +32,10 @@ export { defaultTheme, generateCssVariables, generateThemeStylesheet, mergeTheme
 // Export context and provider
 export {
   ShopcoreProvider,
+  useShopcore,
   useShopcoreConfig,
-  useShopcoreContext,
+  useShopcoreTheme,
+  type ShopcoreContextValue,
   type ShopcoreProviderProps,
 } from './core/context/ShopcoreContext';
 
@@ -79,6 +81,29 @@ export {
   type ProductDetailProps,
   type ProductGridProps,
 } from './components/product';
+
+// Export plugin system
+export {
+  PluginProvider,
+  useAfterFetch,
+  useAfterRender,
+  useBeforeFetch,
+  useBeforeRender,
+  useFetchError,
+  useModifiedCart,
+  useModifiedCartItem,
+  useModifiedProduct,
+  useModifiedProducts,
+  usePluginManager,
+  useReplaceComponent,
+  withPluginHooks,
+} from './core/plugins/hooks';
+export type { PluginProviderProps } from './core/plugins/hooks';
+export { PluginManager } from './core/plugins/manager';
+export type { ShopcorePlugin } from './core/plugins/types';
+
+// Export mock data
+export { mockProducts } from './core/mock/products';
 
 // Version information
 export const VERSION = '0.1.0';
