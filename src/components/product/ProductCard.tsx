@@ -101,7 +101,41 @@ export function ProductCard({
   });
 
   // Get the primary image or the first image
-  const primaryImage = product.images?.find((img) => img.isPrimary) || product.images?.[0];
+  const getImageUrl = () => {
+    if (product.images && product.images.length > 0) {
+      // If images is an array of strings
+      if (typeof product.images[0] === 'string') {
+        return {
+          url: product.images[0],
+          alt: product.name,
+          width: undefined,
+          height: undefined,
+        };
+      }
+
+      // If images is an array of ProductImage objects (from additionalImages)
+      if (product.additionalImages && product.additionalImages.length > 0) {
+        const primaryImage = product.additionalImages.find((img) => img.isPrimary) || product.additionalImages[0];
+        // At this point primaryImage is guaranteed to be defined since we check additionalImages.length > 0
+        return {
+          url: primaryImage?.url || '',
+          alt: primaryImage?.alt || product.name,
+          width: primaryImage?.width,
+          height: primaryImage?.height,
+        };
+      }
+    }
+
+    // Fallback to the main image
+    return {
+      url: product.image || '/placeholder-product.jpg',
+      alt: product.name,
+      width: undefined,
+      height: undefined,
+    };
+  };
+
+  const imageData = getImageUrl();
 
   // Truncate the description if needed
   const truncatedDescription =
@@ -137,13 +171,8 @@ export function ProductCard({
   return (
     <div className={`shopcore-product-card ${className}`} onClick={handleProductClick} {...props}>
       <div className='shopcore-product-card-image'>
-        {primaryImage && (
-          <img
-            src={primaryImage.url}
-            alt={primaryImage.alt || product.name}
-            width={primaryImage.width}
-            height={primaryImage.height}
-          />
+        {imageData.url && (
+          <img src={imageData.url} alt={imageData.alt} width={imageData.width} height={imageData.height} />
         )}
         {hasDiscount && <div className='shopcore-product-card-discount'>{discountPercentage}% OFF</div>}
       </div>

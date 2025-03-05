@@ -51,10 +51,10 @@ export interface ProductDetailProps {
 
 /**
  * ProductDetail component
- * 
+ *
  * Displays detailed information about a product, including images, description,
  * variants, and actions.
- * 
+ *
  * @example
  * ```tsx
  * <ProductDetail
@@ -93,19 +93,64 @@ export function ProductDetail({
     currency,
   });
 
+  // Helper function to normalize images to ProductImage format
+  const normalizeImages = (
+    imageSource: any[] | undefined
+  ): Array<{
+    id: string;
+    url: string;
+    alt?: string;
+    width?: number;
+    height?: number;
+  }> => {
+    if (!imageSource || imageSource.length === 0) {
+      // If no images, use the main product image
+      return product.image
+        ? [
+            {
+              id: 'main',
+              url: product.image,
+              alt: product.name,
+            },
+          ]
+        : [];
+    }
+
+    // Check if images are strings or ProductImage objects
+    return imageSource.map((img, index) => {
+      if (typeof img === 'string') {
+        return {
+          id: `img-${index}`,
+          url: img,
+          alt: `${product.name} - Image ${index + 1}`,
+        };
+      } else if (typeof img === 'object' && 'url' in img) {
+        return img;
+      }
+      // Fallback for unexpected types
+      return {
+        id: `img-${index}`,
+        url: typeof img === 'string' ? img : product.image,
+        alt: `${product.name} - Image ${index + 1}`,
+      };
+    });
+  };
+
   // Get all images (from variant if selected, otherwise from product)
-  const images = selectedVariant?.images?.length ? selectedVariant.images : product.images || [];
-  
+  const variantImages = selectedVariant?.images;
+  const productImages = product.images;
+  const normalizedImages = normalizeImages(variantImages && variantImages.length > 0 ? variantImages : productImages);
+
   // State for selected image
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const selectedImage = images[selectedImageIndex];
+  const selectedImage = normalizedImages[selectedImageIndex];
 
   // Check if the product or selected variant is in stock
   const inStock = selectedVariant ? selectedVariant.inStock : (product.inStock ?? true);
 
   // Handle variant change
   const handleVariantChange = (variantId: string) => {
-    const variant = product.variants?.find(v => v.id === variantId);
+    const variant = product.variants?.find((v) => v.id === variantId);
     setSelectedVariant(variant);
     // Reset selected image when variant changes
     setSelectedImageIndex(0);
@@ -135,9 +180,9 @@ export function ProductDetail({
 
   return (
     <div className={`shopcore-product-detail ${className}`} {...props}>
-      <div className="shopcore-product-detail-gallery">
+      <div className='shopcore-product-detail-gallery'>
         {/* Main image */}
-        <div className="shopcore-product-detail-main-image">
+        <div className='shopcore-product-detail-main-image'>
           {selectedImage && (
             <img
               src={selectedImage.url}
@@ -146,22 +191,16 @@ export function ProductDetail({
               height={selectedImage.height}
             />
           )}
-          {hasDiscount && (
-            <div className="shopcore-product-detail-discount">
-              {discountPercentage}% OFF
-            </div>
-          )}
+          {hasDiscount && <div className='shopcore-product-detail-discount'>{discountPercentage}% OFF</div>}
         </div>
 
         {/* Thumbnail images */}
-        {images.length > 1 && (
-          <div className="shopcore-product-detail-thumbnails">
-            {images.map((image, index) => (
+        {normalizedImages.length > 1 && (
+          <div className='shopcore-product-detail-thumbnails'>
+            {normalizedImages.map((image, index) => (
               <button
                 key={image.id}
-                className={`shopcore-product-detail-thumbnail ${
-                  index === selectedImageIndex ? 'active' : ''
-                }`}
+                className={`shopcore-product-detail-thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
                 onClick={() => setSelectedImageIndex(index)}
               >
                 <img
@@ -176,74 +215,56 @@ export function ProductDetail({
         )}
       </div>
 
-      <div className="shopcore-product-detail-info">
-        <h1 className="shopcore-product-detail-title">{product.name}</h1>
+      <div className='shopcore-product-detail-info'>
+        <h1 className='shopcore-product-detail-title'>{product.name}</h1>
 
         {/* Rating */}
         {showRating && product.rating !== undefined && (
-          <div className="shopcore-product-detail-rating">
-            <span className="shopcore-product-detail-rating-stars">
+          <div className='shopcore-product-detail-rating'>
+            <span className='shopcore-product-detail-rating-stars'>
               {/* Render stars based on rating */}
               {Array.from({ length: 5 }).map((_, i) => (
                 <span
                   key={i}
-                  className={`shopcore-product-detail-rating-star ${
-                    i < Math.floor(product.rating!) ? 'filled' : ''
-                  }`}
+                  className={`shopcore-product-detail-rating-star ${i < Math.floor(product.rating!) ? 'filled' : ''}`}
                 >
                   ★
                 </span>
               ))}
             </span>
-            <span className="shopcore-product-detail-rating-value">
-              {product.rating.toFixed(1)}
-            </span>
-            <span className="shopcore-product-detail-rating-count">
-              ({product.reviewCount || 0} reviews)
-            </span>
+            <span className='shopcore-product-detail-rating-value'>{product.rating.toFixed(1)}</span>
+            <span className='shopcore-product-detail-rating-count'>({product.reviewCount || 0} reviews)</span>
           </div>
         )}
 
         {/* Price */}
-        <div className="shopcore-product-detail-price">
-          <span className="shopcore-product-detail-current-price">
-            {formattedPrice}
-          </span>
+        <div className='shopcore-product-detail-price'>
+          <span className='shopcore-product-detail-current-price'>{formattedPrice}</span>
+          {hasDiscount && <span className='shopcore-product-detail-original-price'>{formattedBasePrice}</span>}
           {hasDiscount && (
-            <span className="shopcore-product-detail-original-price">
-              {formattedBasePrice}
-            </span>
-          )}
-          {hasDiscount && (
-            <span className="shopcore-product-detail-discount-percentage">
-              {discountPercentage}% off
-            </span>
+            <span className='shopcore-product-detail-discount-percentage'>{discountPercentage}% off</span>
           )}
         </div>
 
         {/* Description */}
         {product.description && (
-          <div className="shopcore-product-detail-description">
+          <div className='shopcore-product-detail-description'>
             <p>{product.description}</p>
           </div>
         )}
 
         {/* Variants */}
         {product.variants && product.variants.length > 0 && (
-          <div className="shopcore-product-detail-variants">
-            <label htmlFor="variant-select">Variants:</label>
+          <div className='shopcore-product-detail-variants'>
+            <label htmlFor='variant-select'>Variants:</label>
             <select
-              id="variant-select"
-              className="shopcore-product-detail-variant-select"
+              id='variant-select'
+              className='shopcore-product-detail-variant-select'
               value={selectedVariant?.id}
               onChange={(e) => handleVariantChange(e.target.value)}
             >
               {product.variants.map((variant) => (
-                <option
-                  key={variant.id}
-                  value={variant.id}
-                  disabled={!variant.inStock}
-                >
+                <option key={variant.id} value={variant.id} disabled={!variant.inStock}>
                   {variant.name} {!variant.inStock && '(Out of Stock)'}
                 </option>
               ))}
@@ -253,36 +274,29 @@ export function ProductDetail({
 
         {/* Quantity */}
         {showAddToCart && inStock && (
-          <div className="shopcore-product-detail-quantity">
-            <label htmlFor="quantity-input">Quantity:</label>
+          <div className='shopcore-product-detail-quantity'>
+            <label htmlFor='quantity-input'>Quantity:</label>
             <input
-              id="quantity-input"
-              type="number"
-              min="1"
+              id='quantity-input'
+              type='number'
+              min='1'
               value={quantity}
               onChange={handleQuantityChange}
-              className="shopcore-product-detail-quantity-input"
+              className='shopcore-product-detail-quantity-input'
             />
           </div>
         )}
 
         {/* Actions */}
-        <div className="shopcore-product-detail-actions">
+        <div className='shopcore-product-detail-actions'>
           {showAddToCart && (
-            <button
-              className="shopcore-product-detail-add-to-cart"
-              onClick={handleAddToCart}
-              disabled={!inStock}
-            >
+            <button className='shopcore-product-detail-add-to-cart' onClick={handleAddToCart} disabled={!inStock}>
               {inStock ? 'Add to Cart' : 'Out of Stock'}
             </button>
           )}
 
           {showAddToWishlist && (
-            <button
-              className="shopcore-product-detail-add-to-wishlist"
-              onClick={handleAddToWishlist}
-            >
+            <button className='shopcore-product-detail-add-to-wishlist' onClick={handleAddToWishlist}>
               Add to Wishlist
             </button>
           )}
@@ -290,7 +304,7 @@ export function ProductDetail({
 
         {/* Additional information */}
         {product.attributes && Object.keys(product.attributes).length > 0 && (
-          <div className="shopcore-product-detail-attributes">
+          <div className='shopcore-product-detail-attributes'>
             <h3>Product Details</h3>
             <ul>
               {Object.entries(product.attributes).map(([key, value]) => (
@@ -304,4 +318,4 @@ export function ProductDetail({
       </div>
     </div>
   );
-} 
+}
