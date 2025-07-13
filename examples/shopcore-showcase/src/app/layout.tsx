@@ -1,7 +1,7 @@
 'use client';
 
 import { Inter } from 'next/font/google';
-import { ShopcoreProvider, mockProducts } from 'shopcore';
+import { ShopcoreProvider, createShopcoreConfig, mockProducts } from 'shopcore';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import { discountPlugin } from '../plugins/discount-plugin';
@@ -16,44 +16,17 @@ const inter = Inter({ subsets: ['latin'] });
 // };
 
 // Shopcore configuration
-const shopcoreConfig = {
+const shopcoreConfig = createShopcoreConfig({
   mode: 'development' as const,
   debug: true,
   defaultCurrency: 'USD',
   supportedCurrencies: ['USD', 'EUR', 'GBP'],
   defaultLocale: 'en-US',
   supportedLocales: ['en-US', 'es-ES', 'fr-FR'],
-  enableCart: true,
-  enableWishlist: true,
-  enableCheckout: true,
-  theme: {
-    colors: {
-      primary: '#3b82f6',
-      secondary: '#10b981',
-      accent: '#8b5cf6',
-      background: '#ffffff',
-      text: '#1f2937',
-      error: '#ef4444',
-      success: '#22c55e',
-      warning: '#f59e0b',
-      info: '#3b82f6',
-      border: '#e5e7eb',
-      muted: '#9ca3af',
-      severity: '#ef4444',
-    },
-    fonts: {
-      primary: 'Inter, sans-serif',
-      secondary: 'Poppins, sans-serif',
-      body: 'Inter, sans-serif',
-      heading: 'Poppins, sans-serif',
-      monospace: 'Menlo, Monaco, Consolas, monospace',
-    },
-    borderRadius: {
-      small: '0.25rem',
-      medium: '0.5rem',
-      large: '1rem',
-      full: '9999px',
-    },
+  features: {
+    cart: true,
+    wishlist: true,
+    checkout: true,
   },
   mock: {
     enabled: true,
@@ -62,7 +35,22 @@ const shopcoreConfig = {
       products: mockProducts,
     },
   },
-};
+  cart: {
+    storage: {
+      type: 'localStorage',
+      key: 'shopcore-cart',
+    },
+    behavior: {
+      maxQuantityPerItem: 10,
+      minQuantityPerItem: 1,
+      mergeSameItems: true,
+    },
+    pricing: {
+      shouldIncludeTax: true,
+      taxRate: 0.2,
+    },
+  },
+});
 
 // Plugins to use
 const plugins = [discountPlugin];

@@ -13,7 +13,7 @@ export interface ProviderConfig {
 export const providers: ProviderConfig[] = [
   {
     Component: CartProvider,
-    isEnabled: (config) => Boolean(config.cart?.enabled),
+    isEnabled: (config) => Boolean(config.features?.cart),
     getProps: (config) => ({
       config: {
         storage: config.cart?.storage,

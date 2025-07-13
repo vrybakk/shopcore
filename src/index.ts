@@ -15,6 +15,10 @@ export type {
   User,
 } from './core/types/config';
 
+export type { CartActions, CartConfig, CartState, ProductConfig } from './core/cart/types';
+
+export type { CartContextValue, CartProviderProps } from './core/cart/context';
+
 export type { Product, ProductImage, ProductReview, ProductVariant } from './core/types/product';
 
 // Export theme types and utilities
@@ -31,6 +35,7 @@ export { defaultTheme, generateCssVariables, generateThemeStylesheet, mergeTheme
 
 // Export context and provider
 export {
+  createShopcoreConfig,
   ShopcoreProvider,
   useShopcore,
   useShopcoreConfig,
@@ -104,6 +109,11 @@ export type { ShopcorePlugin } from './core/plugins/types';
 
 // Export mock data
 export { mockProducts } from './core/mock/products';
+
+// Export cart functionality
+export { CartItem as CartItemComponent } from './core/cart/components/CartItem';
+export { CartProvider } from './core/cart/context';
+export { useCart } from './core/cart/hooks';
 
 // Version information
 export const VERSION = '0.1.0';

@@ -12,6 +12,59 @@ import { defaultTheme, Theme } from '../theme/theme';
 const logger = createLogger({ debug: true, mode: 'development' });
 
 /**
+ * Storage type options
+ */
+export const STORAGE_TYPES = ['none', 'localStorage', 'sessionStorage'] as const;
+export type StorageType = (typeof STORAGE_TYPES)[number];
+
+/**
+ * Storage configuration
+ */
+export type StorageConfig = {
+  type: StorageType;
+  key?: string;
+};
+
+/**
+ * Cart behavior configuration
+ */
+export type CartBehaviorConfig = {
+  maxQuantityPerItem?: number;
+  minQuantityPerItem?: number;
+  allowNegativeStock?: boolean;
+  mergeSameItems?: boolean;
+};
+
+/**
+ * Cart pricing configuration
+ */
+export type CartPricingConfig = {
+  calculateTotals?: (items: CartItem<any>[]) => CartState<any>['totals'];
+  shouldIncludeTax?: boolean;
+  taxRate?: number;
+};
+
+/**
+ * Cart configuration
+ */
+export type CartConfig = {
+  storage?: StorageConfig;
+  behavior?: CartBehaviorConfig;
+  pricing?: CartPricingConfig;
+};
+
+/**
+ * Mock data configuration
+ */
+export type MockConfig = {
+  enabled?: boolean;
+  delay?: number;
+  data?: {
+    products?: any[];
+  };
+};
+
+/**
  * Shopcore configuration options
  */
 export interface ShopcoreConfig {
@@ -27,44 +80,18 @@ export interface ShopcoreConfig {
   defaultLocale?: string;
   /** Supported locales */
   supportedLocales?: string[];
-  /** Enable cart functionality */
-  enableCart?: boolean;
-  /** Enable wishlist functionality */
-  enableWishlist?: boolean;
-  /** Enable checkout functionality */
-  enableCheckout?: boolean;
-  /** Mock data configuration */
-  mock?: {
-    /** Enable mock data */
-    enabled?: boolean;
-    /** Delay in milliseconds for mock data */
-    delay?: number;
+  /** Feature flags */
+  features?: {
+    cart?: boolean;
+    wishlist?: boolean;
+    checkout?: boolean;
   };
+  /** Mock data configuration */
+  mock?: MockConfig;
   /** Theme configuration */
   theme?: Partial<Theme>;
   /** Cart configuration */
-  cart?: {
-    /** Enable cart functionality */
-    enabled?: boolean;
-    /** Storage configuration */
-    storage?: {
-      type: 'localStorage' | 'sessionStorage' | 'none';
-      key?: string;
-    };
-    /** Cart behavior */
-    behavior?: {
-      maxQuantityPerItem?: number;
-      minQuantityPerItem?: number;
-      allowNegativeStock?: boolean;
-      mergeSameItems?: boolean;
-    };
-    /** Price calculation */
-    pricing?: {
-      calculateTotals?: (items: CartItem<any>[]) => CartState<any>['totals'];
-      shouldIncludeTax?: boolean;
-      taxRate?: number;
-    };
-  };
+  cart?: CartConfig;
 }
 
 /**
@@ -132,12 +159,20 @@ const defaultConfig: ShopcoreConfig = {
   supportedCurrencies: ['USD'],
   defaultLocale: 'en-US',
   supportedLocales: ['en-US'],
-  enableCart: true,
-  enableWishlist: false,
-  enableCheckout: true,
+  features: {
+    cart: true,
+    wishlist: false,
+    checkout: true,
+  },
   mock: {
     enabled: false,
     delay: 0,
+  },
+  cart: {
+    storage: {
+      type: 'localStorage',
+      key: 'shopcore_cart',
+    },
   },
 };
 
@@ -156,18 +191,42 @@ export class ShopcoreProviderClass extends React.Component<ShopcoreProviderProps
     super(props);
     this.pluginManager = new PluginManager();
 
-    // Merge provided config with default config
+    // Validate and normalize storage type
+    const storageType = props.config?.cart?.storage?.type;
+    const normalizedStorageType = this.normalizeStorageType(storageType);
+
+    // Merge provided config with default config, ensuring type safety
+    const mergedCart: CartConfig = {
+      ...defaultConfig.cart,
+      ...props.config?.cart,
+      storage: {
+        type: normalizedStorageType,
+        key: props.config?.cart?.storage?.key ?? defaultConfig.cart?.storage?.key,
+      },
+    };
+
     this.config = {
       ...defaultConfig,
       ...(props.config || {}),
-      cart: {
-        enabled: false, // Default to disabled
-        ...(props.config?.cart || {}),
+      features: {
+        ...defaultConfig.features,
+        ...props.config?.features,
       },
+      cart: mergedCart,
     };
 
     // Merge provided theme with default theme
     this.theme = { ...defaultTheme, ...(props.theme || {}) };
+  }
+
+  /**
+   * Normalizes storage type to ensure it's valid
+   */
+  private normalizeStorageType(type: unknown): StorageType {
+    if (typeof type === 'string' && STORAGE_TYPES.includes(type as StorageType)) {
+      return type as StorageType;
+    }
+    return defaultConfig.cart?.storage?.type ?? 'localStorage';
   }
 
   componentDidMount() {
@@ -206,8 +265,29 @@ export class ShopcoreProviderClass extends React.Component<ShopcoreProviderProps
       JSON.stringify(config) !== JSON.stringify(prevProps.config || {}) ||
       JSON.stringify(theme) !== JSON.stringify(prevProps.theme || {})
     ) {
+      // Validate and normalize storage type
+      const storageType = config.cart?.storage?.type;
+      const normalizedStorageType = this.normalizeStorageType(storageType);
+
       // Update config and theme
-      this.config = { ...defaultConfig, ...config };
+      const mergedCart: CartConfig = {
+        ...defaultConfig.cart,
+        ...config.cart,
+        storage: {
+          type: normalizedStorageType,
+          key: config.cart?.storage?.key ?? defaultConfig.cart?.storage?.key,
+        },
+      };
+
+      this.config = {
+        ...defaultConfig,
+        ...config,
+        features: {
+          ...defaultConfig.features,
+          ...config.features,
+        },
+        cart: mergedCart,
+      };
       this.theme = { ...defaultTheme, ...theme };
 
       // Clear existing plugins
@@ -277,6 +357,41 @@ export class ShopcoreProviderClass extends React.Component<ShopcoreProviderProps
 
 // Export the provider with proper typing for external use
 export const ShopcoreProvider = ShopcoreProviderClass;
+
+/**
+ * Runtime configuration validator
+ */
+export class ConfigValidator {
+  static validateStorageType(type: unknown): StorageType {
+    if (typeof type === 'string' && STORAGE_TYPES.includes(type as StorageType)) {
+      return type as StorageType;
+    }
+    return 'localStorage';
+  }
+}
+
+/**
+ * Configuration builder with improved DX
+ */
+export const createShopcoreConfig = (config: {
+  [K in keyof ShopcoreConfig]: K extends 'cart'
+    ? {
+        storage?: { type: string; key?: string };
+        behavior?: CartBehaviorConfig;
+        pricing?: CartPricingConfig;
+      }
+    : ShopcoreConfig[K];
+}): ShopcoreConfig => {
+  // Validate and normalize cart storage if present
+  if (config.cart?.storage) {
+    config.cart.storage = {
+      ...config.cart.storage,
+      type: ConfigValidator.validateStorageType(config.cart.storage.type),
+    };
+  }
+
+  return config as ShopcoreConfig;
+};
 
 /**
  * Hook to access the Shopcore context

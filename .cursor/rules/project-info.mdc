@@ -1,0 +1,211 @@
+---
+description: Core Architecture Requirements
+globs: 
+alwaysApply: true
+---
+## Core Architecture
+
+### Provider Configuration
+
+- Always implement `ShopcoreProvider` as the central state management system.
+- Configure mode appropriately:
+  - Use `development` for debugging.
+  - Use `production` for deployment.
+- Implement required core configuration fields:
+
+```typescript
+const config: ShopcoreConfig = {
+  mode: "development" | "production",
+  defaultCurrency: "USD", // Required, no default
+  defaultLocale: "en-US", // Required, no default
+};
+```
+
+## Configuration Best Practices
+
+### Feature Flags
+
+Explicitly configure all feature flags for clarity:
+
+```typescript
+enableCart: true,
+enableWishlist: false,
+enableCheckout: true,
+enableReviews: false,
+enableUpselling: false,
+```
+
+### Currency and Localization
+
+Always specify fallback mechanisms for currency and localization:
+
+```typescript
+supportedCurrencies: ["USD", "EUR", "GBP"],
+fallbackCurrency: "USD",
+supportedLocales: ["en-US", "es-ES", "fr-FR"],
+```
+
+### Theme Configuration
+
+Configure theme consistently across components:
+
+```typescript
+theme: {
+  colorScheme: "system", // Options: "light", "dark", "system"
+  primaryColor: "#0070f3",
+  radius: 4
+}
+```
+
+## Performance Requirements
+
+### Caching Strategy
+
+Configure caching strategy based on application needs:
+
+```typescript
+cacheStrategy: "memory", // Use "persistent" for cross-session data
+cacheSettings: {
+  maxEntries: 100,
+  expirationTime: 3600000 // 1 hour in milliseconds
+}
+```
+
+### Optimizations
+
+- Enable lazy loading for image-heavy applications:
+
+```typescript
+enableLazyLoading: true,
+```
+
+- Optimize for server-side rendering when using frameworks like Next.js:
+
+```typescript
+enableSSR: true,
+```
+
+## Error Handling
+
+### Centralized Error Handling
+
+Implement a centralized error handler in `ShopcoreConfig`:
+
+```typescript
+onError: (error) => {
+  console.error("ShopCore Error:", error);
+  // Implement monitoring system integration
+},
+```
+
+- Structure error handlers to distinguish between critical and non-critical errors.
+
+## Hooks Implementation
+
+Use core hook pattern for all e-commerce functionality:
+
+```typescript
+// Implement cart functionality
+const { items, addItem, removeItem, updateQuantity, total } = useCart();
+
+// Implement product management
+const { products, loading, error, fetchMore } = useProducts(options);
+
+// Implement search functionality
+const { query, results, suggestions, search } = useSearch(config);
+```
+
+## Type System Requirements
+
+### Base Interfaces
+
+Implement base interfaces for all e-commerce entities:
+
+```typescript
+interface BaseProduct {
+  id: string;
+  sku: string;
+  name: string;
+  price: {
+    amount: number;
+    currency: string;
+    compareAt?: number;
+  };
+  inventory: {
+    quantity: number;
+    management: 'finite' | 'infinite' | 'none';
+  };
+}
+```
+
+### Generics for Customization
+
+Use generics for customization:
+
+```typescript
+interface Product<T extends Record<string, unknown> = {}> extends BaseProduct {
+  customFields: T;
+  variants?: Array<ProductVariant<T>>;
+  options?: Array<ProductOption>;
+}
+```
+
+## Plugin System
+
+### Plugin Structure
+
+Structure all plugins with a consistent interface:
+
+```typescript
+type Plugin = {
+  name: string; // Unique identifier
+  setup: (shopcoreContext: ShopcoreContext) => void; // Extension function
+};
+```
+
+### Common Plugins
+
+Implement plugins for these common scenarios:
+
+- Logging and monitoring
+- Analytics integration
+- Payment processing
+- Custom discount logic
+- Third-party service integration
+
+## Testing Requirements
+
+### Mock System
+
+Implement a mock system for testing:
+
+```typescript
+const config: ShopcoreConfig = {
+  mock: {
+    enabled: true,
+    generators: {
+      products: () => mockProducts,
+      cart: () => mockCart,
+      user: () => mockUser,
+      orders: () => mockOrders
+    },
+    scenarios: {
+      outOfStock: simulateOutOfStock,
+      priceChange: simulatePriceChange,
+      paymentError: simulatePaymentError
+    }
+  }
+};
+```
+
+- Test all components with mocked data before integration.
+
+## Development Standards
+
+### Component Development
+
+- All components must be fully responsive.
+- Components must support both light and dark mode.
+- Components must be accessible (WCAG 2.1 AA compliant).
+
+

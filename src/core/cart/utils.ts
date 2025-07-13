@@ -14,15 +14,24 @@ export const calculateCartTotals = <TConfig extends ProductConfig>(
   items: CartItem<TConfig>[],
   taxRate: number = 0
 ): CartState<TConfig>['totals'] => {
+  // Ensure we have items and they have valid prices
+  if (!items.length) {
+    return {
+      subtotal: 0,
+      total: 0,
+      currency: 'USD',
+    };
+  }
+
   const subtotal = items.reduce((total, item) => {
-    return total + item.price.amount * item.quantity;
+    return total + (item.price?.amount || 0) * item.quantity;
   }, 0);
 
   const tax = taxRate > 0 ? subtotal * taxRate : 0;
   const total = subtotal + tax;
 
-  // Get currency from the first item, or default to USD
-  const currency = items[0]?.price.currency || 'USD';
+  // Get currency from the first item with a valid currency, or default to USD
+  const currency = items.find((item) => item.price?.currency)?.price.currency || 'USD';
 
   return {
     subtotal,
@@ -56,12 +65,18 @@ export const createCartItem = <TConfig extends ProductConfig>(
   quantity: number = 1,
   variant?: ShopCoreVariant<TConfig['variants']>
 ): CartItem<TConfig> => {
+  const basePrice = variant?.price || product.price;
+  const price = {
+    amount: typeof basePrice === 'number' ? basePrice : basePrice?.amount || 0,
+    currency: typeof basePrice === 'number' ? 'USD' : basePrice?.currency || 'USD',
+  };
+
   return {
     id: generateCartItemId(),
     product,
     variant,
     quantity,
-    price: variant?.price || product.price,
+    price,
   };
 };
 

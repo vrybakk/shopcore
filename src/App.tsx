@@ -14,9 +14,11 @@ const shopcoreConfig: Partial<ShopcoreConfig> = {
   supportedCurrencies: ['USD', 'EUR', 'GBP'],
   defaultLocale: 'en-US',
   supportedLocales: ['en-US', 'fr-FR', 'es-ES'],
-  enableCart: true,
-  enableWishlist: true,
-  enableCheckout: true,
+  features: {
+    cart: true,
+    wishlist: true,
+    checkout: true,
+  },
   mock: {
     enabled: true,
   },
