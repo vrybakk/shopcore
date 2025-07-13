@@ -2,8 +2,10 @@
 
 import React, { createContext, useContext } from 'react';
 import { createLogger } from '../../utils/logger';
+import { CartItem, CartState } from '../cart/types';
 import { PluginManager } from '../plugins/manager';
 import { ComponentName, ShopcorePlugin } from '../plugins/types';
+import { ProvidersComposer } from '../providers';
 import { defaultTheme, Theme } from '../theme/theme';
 
 // Create a logger instance
@@ -40,6 +42,29 @@ export interface ShopcoreConfig {
   };
   /** Theme configuration */
   theme?: Partial<Theme>;
+  /** Cart configuration */
+  cart?: {
+    /** Enable cart functionality */
+    enabled?: boolean;
+    /** Storage configuration */
+    storage?: {
+      type: 'localStorage' | 'sessionStorage' | 'none';
+      key?: string;
+    };
+    /** Cart behavior */
+    behavior?: {
+      maxQuantityPerItem?: number;
+      minQuantityPerItem?: number;
+      allowNegativeStock?: boolean;
+      mergeSameItems?: boolean;
+    };
+    /** Price calculation */
+    pricing?: {
+      calculateTotals?: (items: CartItem<any>[]) => CartState<any>['totals'];
+      shouldIncludeTax?: boolean;
+      taxRate?: number;
+    };
+  };
 }
 
 /**
@@ -122,7 +147,7 @@ const defaultConfig: ShopcoreConfig = {
  * Using a simplified class component for maximum compatibility with all React versions
  * including React 19
  */
-class ShopcoreProviderClass extends React.Component<ShopcoreProviderProps> {
+export class ShopcoreProviderClass extends React.Component<ShopcoreProviderProps> {
   pluginManager: PluginManager;
   config: ShopcoreConfig;
   theme: Theme;
@@ -132,7 +157,14 @@ class ShopcoreProviderClass extends React.Component<ShopcoreProviderProps> {
     this.pluginManager = new PluginManager();
 
     // Merge provided config with default config
-    this.config = { ...defaultConfig, ...(props.config || {}) };
+    this.config = {
+      ...defaultConfig,
+      ...(props.config || {}),
+      cart: {
+        enabled: false, // Default to disabled
+        ...(props.config?.cart || {}),
+      },
+    };
 
     // Merge provided theme with default theme
     this.theme = { ...defaultTheme, ...(props.theme || {}) };
@@ -235,7 +267,11 @@ class ShopcoreProviderClass extends React.Component<ShopcoreProviderProps> {
       applyFetchErrorHook: (error: Error) => this.pluginManager.applyFetchErrorHook(error),
     };
 
-    return <ShopcoreContext.Provider value={contextValue}>{this.props.children}</ShopcoreContext.Provider>;
+    return (
+      <ShopcoreContext.Provider value={contextValue}>
+        <ProvidersComposer config={this.config}>{this.props.children}</ProvidersComposer>
+      </ShopcoreContext.Provider>
+    );
   }
 }
 
